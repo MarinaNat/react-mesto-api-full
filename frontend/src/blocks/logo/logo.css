@@ -1,0 +1,22 @@
+.logo {
+    width: 142px;
+    height: 33px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.logo:hover {
+    opacity: .6;
+}
+
+@media screen and (max-width: 1050px) {
+    .logo {
+        margin-left: 27px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .logo {
+        width: 104px;
+        height: 24px;
+    }
+}

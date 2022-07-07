@@ -1,0 +1,6 @@
+.full-screen {
+    box-sizing: border-box;
+    position: relative;
+    border: 0;
+    margin: auto;
+}

@@ -1,0 +1,16 @@
+.popup__avatar {
+    margin: 0;
+    margin-top: 0px;
+    padding: 0;
+    padding-bottom: 9px;
+    width: 100%;
+    border: 0;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border-bottom: 1px solid rgb(0, 0, 0, .2);
+}

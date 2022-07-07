@@ -1,0 +1,17 @@
+/*.header__link {
+    width: 142px;
+    height: 33px;
+}
+
+@media screen and (max-width: 1050px) {
+    .header__link {
+        margin-left: 27px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .header__link {
+        width: 104px;
+        height: 24px;
+    }
+}*/
