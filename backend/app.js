@@ -30,7 +30,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(allowedCors);
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(limiter);
 // app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));

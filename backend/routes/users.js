@@ -10,7 +10,7 @@ const {
   getUserProfile,
 } = require('../controllers/users');
 
-// router.get('/', getUsers);
+router.get('/', getUsers);
 router.get('/me', getUserProfile);
 
 router.patch(
@@ -40,6 +40,6 @@ router.get('/:id', celebrate({
   }),
 }), getUser);
 
-router.get('/', getUsers);
+// router.get('/', getUsers);
 
 module.exports.userRouter = router;
