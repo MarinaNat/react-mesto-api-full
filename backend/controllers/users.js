@@ -6,7 +6,7 @@ const NotFoundError = require('../utils/errors/not-found-err');
 const ValidationError = require('../utils/errors/validation-err');
 const AuthError = require('../utils/errors/authorized-err');
 const UserAlreadyExists = require('../utils/errors/user-already-exists');
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, NODE_ENV } = process.env;
 
 const saltRounds = 10;
 

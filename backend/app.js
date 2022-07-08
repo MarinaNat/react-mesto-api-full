@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -7,10 +8,8 @@ const cors = require('cors');
 const { celebrate, Joi, errors } = require('celebrate');
 
 const helmet = require('helmet');
-const dotenv = require('dotenv');
 const { validateURL, putError } = require('./utils/error');
 
-dotenv.config();
 const { userRouter } = require('./routes/users');
 const { cardRouter } = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
@@ -85,6 +84,4 @@ app.use(Authorized, (req, res, next) => next(new NotFoundError('Cтраница 
 app.use(errors());
 app.use(putError);
 
-app.listen(PORT, () => {
-  console.log(`App started on ${PORT} port`);
-});
+app.listen(PORT);
