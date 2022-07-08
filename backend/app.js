@@ -3,7 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser');
-const rateLimit = require('express-rate-limit'); // защиты от DDoS-атак
+// const rateLimit = require('express-rate-limit'); // защиты от DDoS-атак
 const cors = require('cors');
 
 
