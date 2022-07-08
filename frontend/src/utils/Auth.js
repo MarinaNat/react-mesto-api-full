@@ -10,6 +10,7 @@ export const register = (email, password) => {
   console.log("in auth-register:", email, password);
   const promise = fetch(`${BASE_URL}/signup`, {
     method: "POST",
+    credentials: 'include',
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
