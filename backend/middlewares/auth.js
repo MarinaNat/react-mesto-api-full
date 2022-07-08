@@ -27,6 +27,5 @@ const Authorized = (req, res, next) => {
 };
 
 module.exports = {
-  Authorized,
-  genToken,
+  Authorized
 };
