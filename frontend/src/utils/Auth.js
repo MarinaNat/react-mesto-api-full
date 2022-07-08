@@ -2,10 +2,7 @@ export const BASE_URL = "https://marina.nomoredomains.sbs";
 
 function checkResponse(promise) {
   return promise.then((res) => {
-    if(res.ok || res.status(201)) {
-      return res.json();
-     }
-     return Promise.reject(`Ошибка: ${res.status}`);
+    return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
   });
 }
 
