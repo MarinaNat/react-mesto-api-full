@@ -35,12 +35,12 @@ app.use(limiter);
 // app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(requestLogger);
-
 app.use('*', cors({
   origin: allowedCors,
   credentials: true,
 }));
+
+app.use(requestLogger);
 
 app.get('/crash-test', () => { // удалить после прохождения ревью (crash-test)
   setTimeout(() => {

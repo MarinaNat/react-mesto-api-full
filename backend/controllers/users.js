@@ -1,11 +1,13 @@
 const bcrypt = require('bcrypt');
 
-const { genToken } = require('../middlewares/auth');
+// const { genToken } = require('../middlewares/auth');
 const User = require('../models/user');
 const NotFoundError = require('../utils/errors/not-found-err');
 const ValidationError = require('../utils/errors/validation-err');
 const AuthError = require('../utils/errors/authorized-err');
 const UserAlreadyExists = require('../utils/errors/user-already-exists');
+const user = require('../models/user');
+
 const { JWT_SECRET, NODE_ENV } = process.env;
 
 const saltRounds = 10;
@@ -140,27 +142,23 @@ const putchUserAvatar = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
-    .select('+password')
-    .then((user) => {
-      if (!user) {
-        throw new AuthError('Неправильные Email или пароль');
-      }
-
-      const passwordValid = bcrypt.compare(password, user.password);
-
-      return Promise.all([passwordValid, user]);
-    })
-    .then(([passwordValid, user]) => {
-      if (!passwordValid) {
-        throw new AuthError('Неправильные Email или пароль');
-      }
-      return genToken({ id: user._id });
-    })
-    .then((token) => res.send({ token }))
-    .catch((err) => {
-      next(err);
+  if(!email || !password) {
+    throw new AuthError('Неправильные Email или пароль');
+  }
+  return User.findUserByCredentials(email, password)
+  .then((user) => {
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV === 'production' ? JWT_SECRET : 'some',
+      { expiresIn: '7d' },
+    );
+    const { name, userEmail, avatar } = user;
+   
+    return res.send({
+      name, userEmail, avatar, token,
     });
+  })
+  .catch((err) => next(err));
 };
 
 module.exports = {
