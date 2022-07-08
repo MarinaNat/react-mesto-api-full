@@ -32,7 +32,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(allowedCors);
 // app.use(limiter);
-app.use(cors());
+app.use('*', cors({
+  origin: allowedCors,
+  credentials: true,
+}));
 
 app.use(requestLogger);
 
