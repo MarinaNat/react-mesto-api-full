@@ -1,11 +1,11 @@
-require('dotenv').config();
 const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
+const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser');
-// const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit'); // защиты от DDoS-атак
 const cors = require('cors');
-const { celebrate, Joi, errors } = require('celebrate');
+
 
 const helmet = require('helmet');
 const { validateURL, putError } = require('./utils/error');
@@ -14,31 +14,25 @@ const { userRouter } = require('./routes/users');
 const { cardRouter } = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./utils/errors/not-found-err');
-const { Authorized } = require('./middlewares/auth');
+const { Authorized } = require('./middlewares/auth'); //посмотреть
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const allowedCors = require('./utils/utils');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 
 const app = express();
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 минут
-  max: 100,
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 минут
+//   max: 100,
+// });
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(helmet());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(allowedCors);
-// app.use(cookieParser());
-app.use(limiter);
-// app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use('*', cors({
-  origin: allowedCors,
-  credentials: true,
-}));
+// app.use(limiter);
+app.use(cors());
 
 app.use(requestLogger);
 
@@ -75,13 +69,13 @@ app.post(
 
 app.use('/users', Authorized, userRouter);
 app.use('/cards', Authorized, cardRouter);
-
-app.use(errorLogger);
-
 // Обработчик 404-ошибки
 app.use(Authorized, (req, res, next) => next(new NotFoundError('Cтраница не найдена')));
 
+app.use(errorLogger);
 app.use(errors());
 app.use(putError);
 
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
+});

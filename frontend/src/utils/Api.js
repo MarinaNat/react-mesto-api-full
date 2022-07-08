@@ -1,7 +1,13 @@
 export default class Api {
-  constructor(data) {
-    this._url = data.url;
-    this._headers = data.headers;
+  constructor({url }) {
+    this._url = url;
+  }
+
+  get _headers() {
+    return {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('jwt')}`,
+    }
   }
 
   _makeRequest(res) {

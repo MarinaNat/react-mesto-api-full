@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-
+const jwt = require('jsonwebtoken');
 // const { genToken } = require('../middlewares/auth');
 const User = require('../models/user');
 const NotFoundError = require('../utils/errors/not-found-err');
@@ -48,6 +48,7 @@ const getUserProfile = (req, res, next) => {
 
 // Создание пользователя
 const createUser = (req, res, next) => {
+  console.log(req)
   const {
     name,
     about,
