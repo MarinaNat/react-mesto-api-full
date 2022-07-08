@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const AuthError = require('../utils/errors/authorized-err');
 
-const { JWT_SECRET = 'secret-key' } = process.env; // секрутный ключ
+const { JWT_SECRET } = process.env; // секрутный ключ
 // const JWT_SECRET = '111';
 const genToken = (payload) => jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+// const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit'); // защиты от DDoS-атак
 const { celebrate, Joi, errors } = require('celebrate');
 
@@ -16,7 +16,7 @@ const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./utils/errors/not-found-err');
 const { Authorized } = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const corsOptions = require('./utils/utils');
+const allowedCors = require('./utils/utils');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 
@@ -28,12 +28,12 @@ const limiter = rateLimit({
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(helmet());
-// app.use(bodyParser.json());
-app.use(corsOptions);
+app.use(bodyParser.json());
+app.use(allowedCors);
 app.use(cookieParser());
 app.use(limiter);
-app.use(express.urlencoded({ extended: true }));
-// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
