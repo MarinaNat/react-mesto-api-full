@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 // const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit'); // защиты от DDoS-атак
+const cors = require('cors');
 const { celebrate, Joi, errors } = require('celebrate');
 
 const helmet = require('helmet');
@@ -36,6 +37,11 @@ app.use(limiter);
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+
+app.use('*', cors({
+  origin: allowedCors,
+  credentials: true,
+}));
 
 app.get('/crash-test', () => { // удалить после прохождения ревью (crash-test)
   setTimeout(() => {
