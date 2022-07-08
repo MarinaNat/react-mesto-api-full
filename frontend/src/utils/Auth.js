@@ -1,4 +1,4 @@
-export const BASE_URL = "https://marina.nomoredomains.sbs";
+export const BASE_URL = "https://api.marina.nomoredomains.sbs";
 
 function checkResponse(promise) {
   return promise.then((res) => {
