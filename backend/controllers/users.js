@@ -7,6 +7,7 @@ const ValidationError = require('../utils/errors/validation-err');
 const AuthError = require('../utils/errors/authorized-err');
 const UserAlreadyExists = require('../utils/errors/user-already-exists');
 const user = require('../models/user');
+const {error} = require("winston");
 
 const { JWT_SECRET, NODE_ENV } = process.env;
 
@@ -48,7 +49,6 @@ const getUserProfile = (req, res, next) => {
 
 // Создание пользователя
 const createUser = (req, res, next) => {
-  console.log(req)
   const {
     name,
     about,
@@ -60,36 +60,46 @@ const createUser = (req, res, next) => {
   if (!password || !email) {
     throw new ValidationError('почта или пароль должны быть заполнены');
   }
-
-  bcrypt.hash(password, saltRounds)
-    .then((hash) => {
-      User.create({
-        name,
-        about,
-        avatar,
-        email,
-        password: hash,
-      })
-        .then((user) => {
-          const resUser = {
-            name: user.name,
-            about: user.about,
-            avatar: user.avatar,
-            email: user.email,
-            _id: user._id,
-          };
-          res.send({ data: resUser });
+  user.findOne({email})
+    .then((user) => {
+    if (!email) {
+      const err = new Error('Email не может быть пустым');
+      return next(err);
+    }
+    if (user) {
+      const err = new Error('Пользователь с таким email уже есть!');
+      return next(err);
+    }
+    bcrypt.hash(password, saltRounds)
+      .then((hash) => {
+        User.create({
+          name,
+          about,
+          avatar,
+          email,
+          password: hash,
         })
-        .catch((err) => {
-          if (err.name === 'ValidationError') {
-            next(new ValidationError('Некорректные данные при создании пользователя'));
-          }
-          if (err.code === 11000) {
-            return next(new UserAlreadyExists('Такой пользователь уже существует'));
-          }
-          return next(err);
-        });
-    })
+          .then((user) => {
+            const resUser = {
+              name: user.name,
+              about: user.about,
+              avatar: user.avatar,
+              email: user.email,
+              _id: user._id,
+            };
+            res.send({ data: resUser });
+          })
+          .catch((err) => {
+            if (err.name === 'ValidationError') {
+              next(new ValidationError('Некорректные данные при создании пользователя'));
+            }
+            if (err.code === 11000) {
+              return next(new UserAlreadyExists('Такой пользователь уже существует'));
+            }
+            return next(err);
+          });
+      })
+  })
     .catch((err) => {
       next(err);
     });

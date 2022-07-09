@@ -21,21 +21,14 @@ const allowedCors = require('./utils/utils');
 const { PORT = 3000 } = process.env;
 
 const app = express();
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 минут
-//   max: 100,
-// });
+
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 app.use(allowedCors);
-// app.use(limiter);
-app.use('*', cors({
-  origin: allowedCors,
-  credentials: true,
-}));
 
 app.use(requestLogger);
 
