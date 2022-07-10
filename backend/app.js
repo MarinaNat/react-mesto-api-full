@@ -18,7 +18,7 @@ const { Authorized } = require('./middlewares/auth'); //посмотреть
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const allowedCors = require('./utils/utils');
 // Слушаем 3000 порт
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 

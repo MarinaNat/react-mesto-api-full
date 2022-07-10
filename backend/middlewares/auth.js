@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const AuthError = require('../utils/errors/authorized-err');
 
-const { JWT_SECRET, NODE_ENV } = process.env; // секрутный ключ
+const { JWT_SECRET, NODE_ENV } = process.env; // секретный ключ
 // const JWT_SECRET = '111';
 // const genToken = (payload) => jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
 
@@ -23,7 +23,8 @@ const Authorized = (req, res, next) => {
     return next(err)
   }
   req.user = payload;
-  return next();
+  // return next();
+  return;
 };
 
 module.exports = {
