@@ -17,6 +17,7 @@ const NotFoundError = require('./utils/errors/not-found-err');
 const { Authorized } = require('./middlewares/auth'); //посмотреть
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const allowedCors = require('./utils/utils');
+const auth = require('./middlewares/auth')
 // Слушаем 3000 порт
 const PORT = process.env.PORT || 3000;
 
@@ -63,6 +64,7 @@ app.post(
   createUser,
 );
 
+app.use(auth);
 app.use('/users', Authorized, userRouter);
 app.use('/cards', Authorized, cardRouter);
 // Обработчик 404-ошибки
