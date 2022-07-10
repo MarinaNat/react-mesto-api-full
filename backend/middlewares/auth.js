@@ -23,8 +23,7 @@ const Authorized = (req, res, next) => {
     return next(err)
   }
   req.user = payload;
-  // return next();
-  return;
+  return next();
 };
 
 module.exports = {
