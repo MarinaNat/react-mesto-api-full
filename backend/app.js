@@ -29,15 +29,15 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(allowedCors);
+// app.use(allowedCors);
 
 app.use(requestLogger);
-
-// app.get('/crash-test', () => { // удалить после прохождения ревью (crash-test)
-//   setTimeout(() => {
-//     throw new Error('Сервер сейчас упадёт');
-//   }, 0);
-// });
+app.use(cors({ credentials: true, origin: [allowedCors]}));
+app.get('/crash-test', () => { // удалить после прохождения ревью (crash-test)
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post(
   '/signin',
