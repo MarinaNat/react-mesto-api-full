@@ -1,49 +1,52 @@
 export const BASE_URL = "https://api.marina.nomoredomains.sbs";
 
-function checkResponse(promise) {
-  return promise.then((res) => {
-    return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
-  });
-}
+function checkResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Все сломалось:( ${res.status}`);
+};
 
 export const register = (email, password) => {
   console.log("in auth-register:", email, password);
-  const promise = fetch(`${BASE_URL}/signup`, {
+  return fetch(`${BASE_URL}/signup`, {
     method: "POST",
-    credentials: 'include',
+    // credentials: 'include',
     headers: {
-      Accept: "application/json",
+      "Accept": "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
-  });
-  return checkResponse(promise);
+  })
+    .then(checkResponse)
 };
 
 export const authorize = (email, password) => {
-  const promise = fetch(`${BASE_URL}/signin`, {
+  return fetch(`${BASE_URL}/signin`, {
     method: "POST",
-    credentials: 'include',
+    // credentials: 'include',
     headers: {
-      Accept: "application/json",
+      "Accept": "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       email,
       password,
     }),
-  });
-  return checkResponse(promise);
+  })
+    .then(checkResponse)
 };
 
 export const checkToken = (token) => {
   console.log("in auth-checkToken", token);
-  const promise = fetch(`${BASE_URL}/users/me`, {
+  return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
-    credentials: 'include',
+    // credentials: 'include',
     headers: {
-      authorization: `Bearer ${token}`,
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
     },
-  });
-  return checkResponse(promise);
+  })
+    .then(checkResponse)
 };
