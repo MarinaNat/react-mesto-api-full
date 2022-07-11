@@ -14,6 +14,8 @@ function Main({
 }) {
   const currentUser = React.useContext(CurrentUserContext);
 
+console.log('currentUser in main:', currentUser);
+
   return (
     <main className="content">
       <section className="profile">
