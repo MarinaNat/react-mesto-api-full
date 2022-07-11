@@ -156,7 +156,8 @@ console.log('email: ', email, ', password: ', password)
         NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
         { expiresIn: '7d' },
       );
-      res.send({ token });
+      const { name, email, avatar } = user; 
+      res.send({ token,  name, email, avatar});
     })
     .catch(() => {
       next(new AuthError('Ошибка доступа'));
