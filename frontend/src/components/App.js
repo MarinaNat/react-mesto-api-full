@@ -166,7 +166,7 @@ function App() {
           img: unionOk,
           title: "Вы успешно зарегистрировались!",
         });
-        navigate("/sing-in");
+        navigate("/singin");
       })
       .catch(() => {
         setTooltipData({
@@ -250,11 +250,11 @@ function App() {
           ></Route>
 
           <Route
-            path="/sign-up"
+            path="/signup"
             element={<Register onRegister={handleRegister} />}
           ></Route>
           <Route
-            path="/sign-in"
+            path="/signin"
             element={<Login onLogin={handleLogin} />}
           ></Route>
           <Route path="*" element={<Navigate to="/" replace />} />
