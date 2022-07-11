@@ -150,27 +150,45 @@ const putchUserAvatar = (req, res, next) => {
 };
 
 // Аутентификация пользователя
-const login = (req, res, next) => {
+
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if(!email || !password) {
-    throw new AuthError('Неправильные Email или пароль');
-  }
   return User.findUserByCredentials(email, password)
-  .then((user) => {
-    const token = jwt.sign(
-      { _id: user._id },
-      NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
-      { expiresIn: '7d' },
-    );
-    const { name, userEmail, avatar } = user;
-
-    return res.send({
-      name, userEmail, avatar, token,
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
+        { expiresIn: '7d' },
+      );
+      res.send({ token });
+    })
+    .catch(() => {
+      next(new AuthError('Ошибка доступа'));
     });
-  })
-  .catch((err) => next(err));
 };
+
+// const login = (req, res, next) => {
+//   const { email, password } = req.body;
+
+//   if(!email || !password) {
+//     throw new AuthError('Неправильные Email или пароль');
+//   }
+//   return User.findUserByCredentials(email, password)
+//   .then((user) => {
+//     const token = jwt.sign(
+//       { _id: user._id },
+//       NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
+//       { expiresIn: '7d' },
+//     );
+//     const { name, userEmail, avatar } = user;
+
+//     return res.send({
+//       name, userEmail, avatar, token,
+//     });
+//   })
+//   .catch((err) => next(err));
+// };
 
 module.exports = {
   getUsers,
