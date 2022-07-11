@@ -1,13 +1,17 @@
 export default class Api {
-  constructor({url }) {
+  constructor({ url, headers }) {
     this._url = url;
+    this.headers = headers;
+
   }
 
-  _headers() {
+  getHeaders() {
+    const token = localStorage.getItem('jwt');
     return {
       'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('jwt')}`,
-    }
+      authorization: `Bearer ${token}`,
+      ...this.headers,
+    };
   }
 
   _makeRequest(res) {
@@ -21,7 +25,7 @@ export default class Api {
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
       method: "GET",
-      headers: this._headers,
+      headers: this.getHeaders(),
     }).then(this._makeRequest);
   }
 
@@ -29,7 +33,7 @@ export default class Api {
   getCard() {
     return fetch(`${this._url}/cards`, {
       method: "GET",
-      headers: this._headers,
+      headers: this.getHeaders(),
     }).then(this._makeRequest);
   }
 
@@ -37,7 +41,7 @@ export default class Api {
   setUserInfo(name, about) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: this.getHeaders(),
       body: JSON.stringify({
         name: name,
         about: about,
@@ -49,7 +53,7 @@ export default class Api {
   addCard(data) {
     return fetch(`${this._url}/cards`, {
       method: "POST",
-      headers: this._headers,
+      headers: this.getHeaders,
       body: JSON.stringify({
         name: data.name,
         link: data.link,
@@ -61,15 +65,15 @@ export default class Api {
   deleteCard(id) {
     return fetch(`${this._url}/cards/${id}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: this.getHeaders(),
     }).then(this._makeRequest);
   }
 
-//добавленеи, удаление лайков
+  //добавленеи, удаление лайков
   changeLikeCardStatus(id, isLiked) {
     return fetch(`${this._url}/cards/${id}/likes`, {
       method: `${isLiked ? "PUT" : "DELETE"}`,
-      headers: this._headers,
+      headers: this.getHeaders,
     }).then(this._makeRequest);
   }
 
@@ -77,7 +81,7 @@ export default class Api {
   setUserAvatar(data) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: this.getHeaders(),
       body: JSON.stringify({
         avatar: data.avatar,
       }),
