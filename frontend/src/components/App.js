@@ -250,11 +250,11 @@ function App() {
           ></Route>
 
           <Route
-            path="/signup"
+            path="/sign-up"
             element={<Register onRegister={handleRegister} />}
           ></Route>
           <Route
-            path="/signin"
+            path="/sign-in"
             element={<Login onLogin={handleLogin} />}
           ></Route>
           <Route path="*" element={<Navigate to="/" replace />} />
