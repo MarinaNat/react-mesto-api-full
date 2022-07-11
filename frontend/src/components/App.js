@@ -47,9 +47,9 @@ function App() {
     console.log('loggedIn в useEffect: ', loggedIn )
     if (loggedIn) {
       Promise.all([api.getUserInfo(), api.getCard()])
-        .then(([data, cards]) => {
-          console.log(data)
-          setCurrentUser( data );
+        .then(([user, cards]) => {
+          console.log('user in useEffect: ',user)
+          setCurrentUser({ user });
           setCards(cards);
         }) // тут ловим ошибку
         .catch((err) => {
