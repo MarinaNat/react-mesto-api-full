@@ -14,7 +14,6 @@ const { userRouter } = require('./routes/users');
 const { cardRouter } = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./utils/errors/not-found-err');
-const { Authorized } = require('./middlewares/auth'); //посмотреть
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const allowedCors = require('./utils/utils');
 const auth = require('./middlewares/auth')
@@ -32,7 +31,15 @@ app.use(bodyParser.json());
 // app.use(allowedCors);
 
 app.use(requestLogger);
-app.use(cors({ credentials: true, origin: [allowedCors]}));
+app.use(cors({ credentials: true, origin: ['https://api.marina.nomoredomains.sbs',
+'http://api.marina.nomoredomains.sbs',
+'http://marina.nomoredomains.sbs',
+'https://marina.nomoredomains.sbs',
+'http://localhost:3001',
+'http://localhost:3000',
+'https://localhost:3001',
+'https://localhost:3000',
+'https://web.postman.co']}));
 app.get('/crash-test', () => { // удалить после прохождения ревью (crash-test)
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
@@ -65,10 +72,10 @@ app.post(
 );
 
 app.use(auth);
-app.use('/users', Authorized, userRouter);
-app.use('/cards', Authorized, cardRouter);
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardRouter);
 // Обработчик 404-ошибки
-app.use(Authorized, (req, res, next) => next(new NotFoundError('Cтраница не найдена')));
+app.use(auth, (req, res, next) => next(new NotFoundError('Cтраница не найдена')));
 
 app.use(errorLogger);
 app.use(errors());
