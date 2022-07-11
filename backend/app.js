@@ -68,7 +68,7 @@ app.post(
   createUser,
 );
 
-app.use(auth);
+// app.use(auth);
 
 // app.use(require('./routes/users'));
 // app.use(require('./routes/cards)'));
