@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
-const { isEmail } = require('validator');
-const bcrypt = require('bcrypt');
+// const { isEmail } = require('validator');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
 const AuthError = require('../utils/errors/authorized-err')
 // const jwt = require('jsonwebtoken');
-const { validateURL } = require('../utils/error');
+const { validateURL } = require('../utils/const');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -27,7 +28,13 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: [true, 'Поле "email" должно быть заполнено'],
       unique: true,
-      validate: [isEmail, { message: 'Некорректный email' }],
+      // validate: [isEmail, { message: 'Некорректный email' }],
+      validate: {
+        validator(email) {
+          return validator.isEmail(email);
+        },
+        message: 'Такой email не подходит',
+      },
     },
     password: {
       type: String,
