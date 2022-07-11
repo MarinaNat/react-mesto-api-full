@@ -164,7 +164,7 @@ const login = (req, res, next) => {
       { expiresIn: '7d' },
     );
     const { name, userEmail, avatar } = user;
-   
+
     return res.send({
       name, userEmail, avatar, token,
     });

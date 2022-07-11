@@ -3,7 +3,7 @@ export default class Api {
     this._url = url;
   }
 
-  _headers() {
+  get _headers() {
     return {
       'Content-Type': 'application/json',
       authorization: `Bearer ${localStorage.getItem('jwt')}`,

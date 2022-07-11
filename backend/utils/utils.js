@@ -9,8 +9,8 @@ const allowedCors = [
     'https://localhost:3000',
     'https://web.postman.co',
   ];
-  
-  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+
+const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 
 module.exports = (req, res, next) => {
   const { method } = req;
