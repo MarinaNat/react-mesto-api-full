@@ -166,7 +166,7 @@ function App() {
           img: unionOk,
           title: "Вы успешно зарегистрировались!",
         });
-        navigate("/singin");
+        navigate("/signin");
       })
       .catch(() => {
         setTooltipData({
