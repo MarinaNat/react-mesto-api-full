@@ -44,6 +44,7 @@ function App() {
   }, []);
 
   React.useEffect(() => {
+    console.log('loggedIn в useEffect: ', loggedIn )
     if (loggedIn) {
       Promise.all([api.getUserInfo(), api.getCard()])
         .then(([data, cards]) => {
