@@ -8,9 +8,18 @@
     "dev": "nodemon app.js",
     "lint": "npx eslint ."
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarinaNat/express-mesto-gha.git"
+  },
+
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarinaNat/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/MarinaNat/express-mesto-gha#readme",
   "dependencies": {
     "@types/validator": "^13.7.3",
     "bcrypt": "^5.0.1",

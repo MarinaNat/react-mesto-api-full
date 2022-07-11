@@ -44,17 +44,19 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    console.log('loggedIn в useEffect: ', loggedIn )
+    console.log('loggedIn в useEffect: ', loggedIn)
     if (loggedIn) {
       Promise.all([api.getUserInfo(), api.getCard()])
         .then(([user, cards]) => {
-          console.log('user in useEffect: ',user)
+          console.log('user in useEffect: ', user)
           setCurrentUser({ user });
           setCards(cards);
         }) // тут ловим ошибку
         .catch((err) => {
           console.log(err);
         });
+    } else {
+      return;
     }
   }, [loggedIn]);
 
