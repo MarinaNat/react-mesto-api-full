@@ -74,7 +74,7 @@ app.use(auth);
 // app.use(require('./routes/cards)'));
 
 app.use('/', auth, userRouter);
-app.use('/cards', auth, cardRouter);
+app.use('/', auth, cardRouter);
 // Обработчик 404-ошибки
 // app.use(auth, (req, res, next) => next(new NotFoundError('Cтраница не найдена')));
 
