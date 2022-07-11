@@ -3,7 +3,7 @@ export default class Api {
     this._url = url;
   }
 
-  get _headers() {
+  _headers() {
     return {
       'Content-Type': 'application/json',
       authorization: `Bearer ${localStorage.getItem('jwt')}`,
@@ -34,13 +34,13 @@ export default class Api {
   }
 
   //отправка данных профиля
-  setUserInfo(userData) {
+  setUserInfo(name, about) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
-        name: userData.name,
-        about: userData.about,
+        name: name,
+        about: about,
       }),
     }).then(this._makeRequest);
   }
