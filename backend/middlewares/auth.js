@@ -17,7 +17,7 @@ const Authorized = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'some');
   } catch (e) {
     const err = new AuthError('jwt toten не валиден, авторизируйтесь');
     return next(err)
