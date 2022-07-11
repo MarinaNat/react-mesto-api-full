@@ -14,6 +14,7 @@ const { userRouter } = require('./routes/users');
 const { cardRouter } = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./utils/errors/not-found-err');
+const handleErrors = require('./middlewares/handleErrors');
 const auth = require('./middlewares/auth');
 // const handleErrors = require('./middlewares/handleErrors'); посмотреть что там
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -70,8 +71,8 @@ app.post(
 app.use(auth);
 
 
-app.use(require('./routes/userRouter'));
-app.use(require('./routes/cardRouter)'));
+app.use(require('./routes/users'));
+app.use(require('./routes/cards)'));
 
 // app.use('/users', auth, userRouter);
 // app.use('/cards', auth, cardRouter);
@@ -86,7 +87,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true, f
 
 app.use(errorLogger);
 app.use(errors());
-app.use(putError);
+// app.use(putError);
+app.use(handleErrors);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
