@@ -32,6 +32,19 @@ app.use(allowedCors);
 
 app.use(requestLogger);
 
+app.use(cors({
+  credentials: true, origin: [
+    'https://api.marina.nomoredomains.sbs',
+    'http://api.marina.nomoredomains.sbs',
+    'http://marina.nomoredomains.sbs',
+    'https://marina.nomoredomains.sbs',
+    'http://localhost:3001',
+    'http://localhost:3000',
+    'https://localhost:3001',
+    'https://localhost:3000',
+    'https://web.postman.co']
+}));
+
 app.get('/crash-test', () => { // удалить после прохождения ревью (crash-test)
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
