@@ -18,6 +18,7 @@ const handleErrors = require('./middlewares/handleErrors');
 const auth = require('./middlewares/auth');
 // const handleErrors = require('./middlewares/handleErrors'); посмотреть что там
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { Reg } = require('./utils/const');
 const allowedCors = require('./utils/utils');
 
 const app = express();
@@ -62,7 +63,7 @@ app.post(
       about: Joi.string().min(2).max(30),
       email: Joi.string().required().email(),
       password: Joi.string().required(),
-      avatar: Joi.string().custom(validateURL),
+      avatar: Joi.string().pattern(Reg),
     }),
   }),
   createUser,
