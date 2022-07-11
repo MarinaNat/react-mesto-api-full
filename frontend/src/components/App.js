@@ -48,7 +48,7 @@ function App() {
       Promise.all([api.getUserInfo(), api.getCard()])
         .then(([data, cards]) => {
           console.log(data)
-          setCurrentUser('data: ', data);
+          setCurrentUser({ data });
           setCards(cards);
         }) // тут ловим ошибку
         .catch((err) => {
