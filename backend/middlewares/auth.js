@@ -1,7 +1,30 @@
 const jwt = require('jsonwebtoken');
 const AuthError = require('../utils/errors/authorized-err');
 
-const { JWT_SECRET, NODE_ENV } = process.env; // секрутный ключ
+const { JWT_SECRET, NODE_ENV } = process.env; // секретный ключ
+
+const auth = (req, res, next) => {
+  const { authorization } = req.headers;
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    throw (new AuthError('Необходима авторизация'));
+  } else {
+    const token = authorization.replace('Bearer ', '');
+    let payload;
+
+    try {
+      payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY');
+    } catch (err) {
+      next(res.status(401).send({ message: 'Вы не прошли авторизацию' }));
+    }
+
+    req.user = payload;
+    next();
+  }
+};
+
+module.exports = auth;
+
 // const JWT_SECRET = '111';
 // const genToken = (payload) => jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
 
@@ -29,26 +52,3 @@ const { JWT_SECRET, NODE_ENV } = process.env; // секрутный ключ
 // module.exports = {
 //   Authorized,
 // };
-
-
-const auth = (req, res, next) => {
-  const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw (new AuthError('Необходима авторизация'));
-  } else {
-    const token = authorization.replace('Bearer ', '');
-    let payload;
-
-    try {
-      payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY');
-    } catch (err) {
-      next(res.status(401).send({ message: 'Вы не прошли авторизацию' }));
-    }
-
-    req.user = payload;
-    next();
-  }
-};
-
-module.exports = auth;
