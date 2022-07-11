@@ -86,7 +86,7 @@ export default class Api {
 }
 
 export const api = new Api({
-  url: "api.marina.nomoredomains.sbs",
+  url: "https://api.marina.nomoredomains.sbs",
   headers: {
     // authorization: "143aa2a9-cefa-4929-a9d6-e76e666a89c9",
     "Content-Type": "application/json",
