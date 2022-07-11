@@ -14,7 +14,7 @@ const { userRouter } = require('./routes/users');
 const { cardRouter } = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./utils/errors/not-found-err');
-const { Authorized } = require('./middlewares/auth');
+const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const allowedCors = require('./utils/utils');
 // Слушаем 3000 порт
@@ -67,10 +67,10 @@ app.post(
   createUser,
 );
 
-app.use('/users', Authorized, userRouter);
-app.use('/cards', Authorized, cardRouter);
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardRouter);
 // Обработчик 404-ошибки
-app.use(Authorized, (req, res, next) => next(new NotFoundError('Cтраница не найдена')));
+app.use(auth, (req, res, next) => next(new NotFoundError('Cтраница не найдена')));
 
 app.use(errorLogger);
 app.use(errors());
