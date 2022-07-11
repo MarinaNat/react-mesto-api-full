@@ -145,7 +145,7 @@ function App() {
         .then((res) => {
           if (res) {
             console.log("in app-checkToken-then:", res);
-            setEmail(res.data.email);
+            setEmail(res.email);
             setLoggedIn(true);
             navigate("/");
           }
