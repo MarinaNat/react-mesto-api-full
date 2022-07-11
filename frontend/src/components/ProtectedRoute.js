@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ component: Component, ...props }) => {
-  console.log(props.loggedIn) 
+  console.log("ProtectedRoute: ", props.loggedIn) 
   return props.loggedIn ? (
     <Component {...props} />
   ) : (
