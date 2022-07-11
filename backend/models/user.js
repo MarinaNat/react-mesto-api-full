@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const AuthError = require('../utils/errors/authorized-err')
+// const jwt = require('jsonwebtoken');
 const { validateURL } = require('../utils/error');
 
-const userSchema = new mongoose.Schema(
-  {
+const userSchema = new mongoose.Schema({
     name: {
       type: String,
       minlength: 2,
@@ -34,29 +34,23 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Поле "password" должно быть заполнено'],
       select: false,
     },
-  },
-  {
-    versionKey: false,
-  },
-);
+  });
 
-function findByCredentials(email, password) {
-  return this.findOne({ email })
-    .select('+password')
+userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
+  return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        throw new AuthError('Неправильные почта или пароль');
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            throw new AuthError('Неправильные почта или пароль');
           }
+
           return user;
         });
     });
-}
-
-userSchema.statics.findUserByCredentials = findByCredentials;
+};
 
 module.exports = mongoose.model('user', userSchema);

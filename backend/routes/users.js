@@ -10,11 +10,12 @@ const {
   getUserProfile,
 } = require('../controllers/users');
 
-router.get('/', getUsers);
-router.get('/me', getUserProfile);
+router.get('/users', getUsers);
+// информация о текущем пользователе
+router.get('/users/me', getUserProfile);
 
 router.patch(
-  '/me',
+  '/users/me',
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30),
@@ -25,7 +26,7 @@ router.patch(
 );
 
 router.patch(
-  '/me/avatar',
+  '/users/me/avatar',
   celebrate({
     body: Joi.object().keys({
       avatar: Joi.string().custom(validateURL),
@@ -34,9 +35,9 @@ router.patch(
   putchUserAvatar,
 );
 
-router.get('/:id', celebrate({
+router.get('/users/:userId', celebrate({
   params: Joi.object().keys({
-    id: Joi.string().alphanum().length(24),
+    userId: Joi.string().alphanum().length(24),
   }),
 }), getUser);
 

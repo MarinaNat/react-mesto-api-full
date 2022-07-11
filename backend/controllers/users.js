@@ -7,48 +7,48 @@ const ValidationError = require('../utils/errors/validation-err');
 const AuthError = require('../utils/errors/authorized-err');
 const UserAlreadyExists = require('../utils/errors/user-already-exists');
 const user = require('../models/user');
-const {error} = require("winston");
+// const {error} = require("winston");
 
 const { JWT_SECRET, NODE_ENV } = process.env;
 
 const saltRounds = 10;
 
-const getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => {
-      res.send(users);
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
 // запрос всех пользователей
-const getUser = (req, res, next) => {
-  const { id } = req.params;
-  User.findById(id)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError({ message: 'Запрашиваемый пользователь не найден' });
-      }
-      res.send(user);
-    })
-    .catch((err) => {
-      next(err);
-    });
+module.exports.getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) =>
+      res.status(200).send({ data: users }))
+    .catch(next);
 };
 
 // Запрос пользователя по id
-const getUserProfile = (req, res, next) => {
-  User.findById(req.user.id)
-    .then((user) => res.send(user))
+module.exports.getUser = (req, res, next) => {
+  User.findById(req.params.userId)
+    .then((user) => {
+      if (!user) {
+        throw next(new NotFoundError({ message: 'Запрашиваемый пользователь не найден' }));
+      }
+      return res.send({ user });
+    })
+    .catch(next);
+};
+
+// информация о текущем пользователе
+module.exports.getUserProfile = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Такого пользователя нет');
+      }
+      return res.send(user);
+    })
     .catch((err) => {
       next(err);
     });
 };
 
 // Создание пользователя
-const createUser = (req, res, next) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -60,92 +60,87 @@ const createUser = (req, res, next) => {
   if (!password || !email) {
     throw new ValidationError('почта или пароль должны быть заполнены');
   }
-  user.findOne({email})
+
+  User.findOne({ email })
     .then((user) => {
-    if (!email) {
-      const err = new Error('Email не может быть пустым');
-      return next(err);
-    }
-    if (user) {
-      const err = new Error('Пользователь с таким email уже есть!');
-      return next(err);
-    }
-    bcrypt.hash(password, saltRounds)
-      .then((hash) => {
-        User.create({
-          name,
-          about,
-          avatar,
-          email,
-          password: hash,
-        })
-          .then((user) => {
-            const resUser = {
-              name: user.name,
-              about: user.about,
-              avatar: user.avatar,
-              email: user.email,
-              _id: user._id,
-            };
-            res.send({ data: resUser });
-          })
+      if (!email) {
+        const err = new Error('Email не может быть пустым');
+        return next(err);
+      }
+      if (user) {
+        throw new UserAlreadyExists('Такой пользователь уже существует');
+      } else {
+        // if (user) {
+        //   const err = new Error('Пользователь с таким email уже есть!');
+        //   return next(err);
+
+        bcrypt.hash(password, saltRounds)
+          .then((hash) =>
+            User.create({
+              name,
+              about,
+              avatar,
+              email,
+              password: hash,
+            }))
+          .then((userData) => res.send({
+            name: userData.name,
+            about: userData.about,
+            avatar: userData.avatar,
+            id: userData._id,
+            email: userData.email,
+          }))
           .catch((err) => {
             if (err.name === 'ValidationError') {
               next(new ValidationError('Некорректные данные при создании пользователя'));
             }
             if (err.code === 11000) {
-              return next(new UserAlreadyExists('Такой пользователь уже существует'));
+              next(new UserAlreadyExists('Такой пользователь уже существует'));
             }
-            return next(err);
+            next(err);
           });
-      })
-  })
+      }
+    })
     .catch((err) => {
       next(err);
     });
 };
 
-const putchUserProfile = (req, res, next) => {
+//редактирование профиля
+module.exports.putchUserProfile = (req, res, next) => {
   const { name, about } = req.body;
-  const { id } = req.user;
 
-  User.findByIdAndUpdate(
-    id,
-    { name, about },
-    { new: true, runValidators: true },
-  )
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Запрашиваемый пользователь не найден');
       }
-      res.send({ data: user });
+      return res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ValidationError(`Переданы некорректные данные ${err.message}`));
-      } else {
-        next(err);
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new ValidationError('Введены некорректные данные');
       }
+      next(err);
     });
 };
 
-const putchUserAvatar = (req, res, next) => {
+//редактирование аватара
+module.exports.putchUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  const { id } = req.user;
 
-  User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Запрашиваемый пользователь не найден');
       }
-      res.send({ data: user });
+      res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ValidationError(`Переданы некорректные данные ${err.message}`));
-      } else {
-        next(err);
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new ValidationError('Введены некорректные данные');
       }
+      next(err);
     });
 };
 
@@ -190,12 +185,12 @@ module.exports.login = (req, res, next) => {
 //   .catch((err) => next(err));
 // };
 
-module.exports = {
-  getUsers,
-  getUser,
-  createUser,
-  getUserProfile,
-  putchUserProfile,
-  putchUserAvatar,
-  login,
-};
+// module.exports = {
+//   getUsers,
+//   getUser,
+//   createUser,
+//   getUserProfile,
+//   putchUserProfile,
+//   putchUserAvatar,
+//   login,
+// };
