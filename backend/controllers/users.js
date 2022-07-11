@@ -157,7 +157,7 @@ console.log('email: ', email, ', password: ', password)
         { expiresIn: '7d' },
       );
       const { name, email, avatar } = user; 
-      res.send({ token,  name, email, avatar});
+      res.send({ token, name, email, avatar });
     })
     .catch(() => {
       next(new AuthError('Ошибка доступа'));
