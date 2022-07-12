@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "https://api.marina.nomoredomains.sbs";
 
 function checkResponse(res) {
   if (res.ok) {
