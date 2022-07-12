@@ -9,9 +9,9 @@ const { validateURL } = require('../utils/const');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
+    default: 'Жак-Ив Кусто',
     minlength: 2,
     maxlength: 30,
-    default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
@@ -26,9 +26,8 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: [true, 'Поле "email" должно быть заполнено'],
+    required: [true, 'Обязательно заполните это поле'],
     unique: true,
-    // validate: [isEmail, { message: 'Некорректный email' }],
     validate: {
       validator(email) {
         return validator.isEmail(email);
@@ -38,7 +37,8 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Поле "password" должно быть заполнено'],
+    required: true,
+    minlength: 8,
     select: false,
   },
 });

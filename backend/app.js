@@ -1,20 +1,18 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser');
+const { errors, celebrate, Joi } = require('celebrate');
 // const rateLimit = require('express-rate-limit'); // защиты от DDoS-атак
 const cors = require('cors');
-
+const { login, createUser } = require('./controllers/users');
 // const helmet = require('helmet');
 // const { validateURL, putError } = require('./utils/error');
-
-const { userRouter } = require('./routes/users');
-const { cardRouter } = require('./routes/cards');
-const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
+// const { userRouter } = require('./routes/users');
+// const { cardRouter } = require('./routes/cards');
 const NotFoundError = require('./utils/errors/notFoundErr');
 const handleErrors = require('./middlewares/handleErrors');
-const auth = require('./middlewares/auth');
 // const handleErrors = require('./middlewares/handleErrors'); посмотреть что там
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { Reg } = require('./utils/const');
@@ -39,38 +37,30 @@ app.get('/crash-test', () => { // удалить после прохождени
   }, 0);
 });
 
-app.post(
-  '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-    }),
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
   }),
-  login,
-);
+}), login);
 
-app.post(
-  '/signup',
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().min(2).max(30),
-      about: Joi.string().min(2).max(30),
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-      avatar: Joi.string().pattern(Reg),
-    }),
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(Reg),
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
   }),
-  createUser,
-);
+}), createUser);
 
-// app.use(auth);
+app.use(auth);
 
-// app.use(require('./routes/users'));
-// app.use(require('./routes/cards'));
+app.use(require('./routes/users'));
+app.use(require('./routes/cards'));
 
-app.use('/', auth, userRouter);
-app.use('/', auth, cardRouter);
+// app.use('/', auth, userRouter);
+// app.use('/', auth, cardRouter);
 // Обработчик 404-ошибки
 // app.use(auth, (req, res, next) => next(new NotFoundError('Cтраница не найдена')));
 
@@ -79,12 +69,9 @@ app.all('*', () => {
 });
 
 mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true, family: 4 });
+app.use(errorLogger); // подключаем логгер ошибок
 
-app.use(errorLogger);
 app.use(errors());
-// app.use(putError);
 app.use(handleErrors);
 
-app.listen(PORT, () => {
-  console.log(`App слушает порт ${PORT}`);
-});
+app.listen(PORT);
