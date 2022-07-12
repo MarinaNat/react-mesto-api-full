@@ -6,9 +6,8 @@ const bodyParser = require('body-parser');
 // const rateLimit = require('express-rate-limit'); // защиты от DDoS-атак
 const cors = require('cors');
 
-
-const helmet = require('helmet');
-const { validateURL, putError } = require('./utils/error');
+// const helmet = require('helmet');
+// const { validateURL, putError } = require('./utils/error');
 
 const { userRouter } = require('./routes/users');
 const { cardRouter } = require('./routes/cards');
@@ -19,7 +18,7 @@ const auth = require('./middlewares/auth');
 // const handleErrors = require('./middlewares/handleErrors'); посмотреть что там
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { Reg } = require('./utils/const');
-const allowedCors = require('./utils/utils');
+// const allowedCors = require('./utils/utils');
 
 const app = express();
 // Слушаем 3000 порт
@@ -29,14 +28,10 @@ app.use(bodyParser.json());
 
 // app.use(helmet());
 // app.use(bodyParser.urlencoded({ extended: false }));
-
-
 // app.use(allowedCors);
 
 app.use(requestLogger);
-app.use(cors({
-  credentials: true, origin: ['https://api.marina.nomoredomains.sbs', 'http://api.marina.nomoredomains.sbs', 'http://marina.nomoredomains.sbs', 'https://marina.nomoredomains.sbs', 'http://localhost:3001', 'http://localhost:3000', 'https://localhost:3001', 'https://localhost:3000', 'https://web.postman.co']
-}));
+app.use(cors({ credentials: true, origin: ['https://api.marina.nomoredomains.sbs', 'http://api.marina.nomoredomains.sbs', 'http://marina.nomoredomains.sbs', 'https://marina.nomoredomains.sbs', 'http://localhost:3001', 'http://localhost:3000', 'https://localhost:3001', 'https://localhost:3000', 'https://web.postman.co'] }));
 
 app.get('/crash-test', () => { // удалить после прохождения ревью (crash-test)
   setTimeout(() => {

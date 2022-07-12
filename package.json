@@ -4,5 +4,9 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.19.0",
+    "eslint-plugin-react": "^7.30.1"
   }
 }

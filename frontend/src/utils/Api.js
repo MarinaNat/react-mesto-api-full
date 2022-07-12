@@ -8,10 +8,10 @@ export default class Api {
   getHeaders() {
     const token = localStorage.getItem('jwt');
     return {
-        'Authorization': `Bearer ${token}`,
-        ...this.headers,
+      'Authorization': `Bearer ${token}`,
+      ...this.headers,
     };
-}
+  }
 
   makeRequest(res) {
     if (res.ok) {
