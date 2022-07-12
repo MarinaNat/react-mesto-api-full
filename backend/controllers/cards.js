@@ -4,7 +4,7 @@ const ValidationError = require('../utils/errors/validationErr');
 const ForbiddenError = require('../utils/errors/forbiddenYrr');
 
 // Запрос всех карточек
-const getCards = (req, res, next) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))
     .catch((err) => {
@@ -13,74 +13,72 @@ const getCards = (req, res, next) => {
 };
 
 // Создание карточки
-const createCard = (req, res, next) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
-  const owner = req.user.id;
-
+  const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные'));
-      } else {
-        next(err);
       }
+      next(err);
     });
 };
 
 // Удаление карточки
-const deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
+module.exports.deleteCard = (req, res, next) => {
+  const { cardId } = req.params;
+  Card.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Запрашиваемая карточка не найдена');
       }
-      const owner = card.owner.toString();
-      if (owner !== req.user.id) {
+      if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('У вас нет прав удалять чужие карточки');
+      } else {
+        Card.findByIdAndRemove(cardId)
+          .then(() => {
+            res.send({ messege: 'Карточка удалена' });
+          });
       }
-      return Card.findByIdAndRemove(req.params.cardId)
-        .then(() => {
-          res.send({ message: 'Карточка удалена' });
-        });
     })
     .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new ValidationError('Введены некорректные данные');
+      }
       next(err);
     });
 };
 
 // Добавления лайка
-const likeCard = (req, res, next) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .then((cardData) => {
-      if (!cardData) {
+    .then((card) => {
+      if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      res.send({ data: cardData });
+      res.status(201).send(card);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 // Снятие лайка с карточки
-const dislikeCard = (req, res, next) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-    .then((cardData) => {
-      if (!cardData) {
+    .then((card) => {
+      if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      res.send({ data: cardData });
+      res.send(card);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
-module.exports = {
-  getCards,
-  deleteCard,
-  createCard,
-  likeCard,
-  dislikeCard,
-};
+// module.exports = {
+//   getCards,
+//   deleteCard,
+//   createCard,
+//   likeCard,
+//   dislikeCard,
+// };
