@@ -41,6 +41,4 @@ router.get('/users/:userId', celebrate({
   }),
 }), getUser);
 
-// router.get('/', getUsers);
-
 module.exports.userRouter = router;

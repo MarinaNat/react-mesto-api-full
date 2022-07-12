@@ -1,12 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// const { genToken } = require('../middlewares/auth');
 const User = require('../models/user');
 const NotFoundError = require('../utils/errors/notFoundErr');
 const ValidationError = require('../utils/errors/validationErr');
 const AuthError = require('../utils/errors/authorizedErr');
 const UserAlreadyExists = require('../utils/errors/userAlreadyExists');
-// const {error} = require("winston");
 
 const { JWT_SECRET, NODE_ENV } = process.env;
 
@@ -64,10 +62,6 @@ module.exports.createUser = (req, res, next) => {
       if (user) {
         throw new UserAlreadyExists('Такой пользователь уже существует');
       } else {
-        // if (user) {
-        //   const err = new Error('Пользователь с таким email уже есть!');
-        //   return next(err);
-
         bcrypt.hash(password, saltRounds)
           .then((hash) => User.create({
             name,
@@ -156,35 +150,3 @@ module.exports.login = (req, res, next) => {
       next(new AuthError('Ошибка доступа'));
     });
 };
-
-// module.exports.login = (req, res, next) => {
-//   const { email, password } = req.body;
-
-//   if(!email || !password) {
-//     throw new AuthError('Неправильные Email или пароль');
-//   }
-//   return User.findUserByCredentials(email, password)
-//   .then((user) => {
-//     const token = jwt.sign(
-//       { _id: user._id },
-//       NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
-//       { expiresIn: '7d' },
-//     );
-//     const { name, userEmail, avatar } = user;
-
-//     return res.send({
-//       name, userEmail, avatar, token,
-//     });
-//   })
-//   .catch((err) => next(err));
-// };
-
-// module.exports = {
-//   getUsers,
-//   getUser,
-//   createUser,
-//   getUserProfile,
-//   putchUserProfile,
-//   putchUserAvatar,
-//   login,
-// };

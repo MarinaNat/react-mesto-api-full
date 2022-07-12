@@ -1,5 +1,3 @@
-// const validator = require('validator');
-
 const putError = (err, req, res, next) => {
   if (err.statusCode) {
     return res

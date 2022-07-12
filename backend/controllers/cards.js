@@ -74,11 +74,3 @@ module.exports.dislikeCard = (req, res, next) => {
     })
     .catch(next);
 };
-
-// module.exports = {
-//   getCards,
-//   deleteCard,
-//   createCard,
-//   likeCard,
-//   dislikeCard,
-// };
