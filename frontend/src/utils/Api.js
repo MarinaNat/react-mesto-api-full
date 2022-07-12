@@ -52,7 +52,7 @@ export default class Api {
   addCard(data) {
     return fetch(`${this._url}/cards`, {
       method: "POST",
-      headers: this.getHeaders,
+      headers: this.getHeaders(),
       body: JSON.stringify({
         name: data.name,
         link: data.link,
@@ -72,7 +72,7 @@ export default class Api {
   changeLikeCardStatus(id, isLiked) {
     return fetch(`${this._url}/cards/${id}/likes`, {
       method: `${isLiked ? "PUT" : "DELETE"}`,
-      headers: this.getHeaders,
+      headers: this.getHeaders(),
     }).then(this._makeRequest);
   }
 
