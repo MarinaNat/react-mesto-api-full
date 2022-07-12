@@ -1,7 +1,7 @@
 import React from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Card from "./Card";
-// import api from "../utils/Api";
+
 
 function Main({
   onEditProfile,
@@ -14,7 +14,6 @@ function Main({
 }) {
   const currentUser = React.useContext(CurrentUserContext);
 
-console.log('currentUser in main:', currentUser);
 
   return (
     <main className="content">
@@ -50,7 +49,7 @@ console.log('currentUser in main:', currentUser);
         ></button>
       </section>
       <section className="elements">
-        {cards.map((card) => (
+        {cards.length > 0 && cards.map((card) => (
           <Card
             key={card._id}
             card={card}

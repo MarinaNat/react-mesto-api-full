@@ -44,20 +44,17 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    console.log('loggedIn в useEffect: ', loggedIn)
-    if (loggedIn) {
-      Promise.all([api.getUserInfo(), api.getCard()])
+    if (!loggedIn) {
+     return ;
+    }
+    Promise.all([api.getUserInfo(), api.getCard()])
         .then(([user, cards]) => {
-          console.log('user in useEffect: ', user)
-          setCurrentUser({ user });
+          setCurrentUser(user);
           setCards(cards);
         }) // тут ловим ошибку
         .catch((err) => {
           console.log(err);
         });
-    } else {
-      return;
-    }
   }, [loggedIn]);
 
   const handleEditProfileClick = () => {
@@ -78,7 +75,7 @@ function App() {
 
   const handleCardLike = (card) => {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
@@ -108,6 +105,7 @@ function App() {
     api
       .setUserInfo(userData)
       .then((data) => {
+        console.log(data)
         setCurrentUser(data);
         closeAllPopups();
       })
@@ -120,6 +118,7 @@ function App() {
     api
       .setUserAvatar(data)
       .then((data) => {
+        console.log(data)
         setCurrentUser(data);
         closeAllPopups();
       })
@@ -132,6 +131,7 @@ function App() {
     api
       .addCard(data)
       .then((newCard) => {
+        console.log(newCard)
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
@@ -142,30 +142,29 @@ function App() {
 
   function checkToken() {
     const token = localStorage.getItem("token");
-    console.log("in app-checkToken:", token);
     if (token) {
       auth
         .checkToken(token)
         .then((res) => {
           if (res) {
-            console.log("in app-checkToken-then:", res);
+            setCurrentUser(res)
             setEmail(res.email);
             setLoggedIn(true);
             navigate("/");
           }
         })
         .catch((err) => {
-          // console.log(err);
+           console.log(err);
         });
     }
   }
 
   function handleRegister(email, password) {
-    console.log("in app-register1", email, password);
+
     auth
       .register(email, password)
       .then((res) => {
-        console.log("in app-register-then", res);
+
         setTooltipData({
           img: unionOk,
           title: "Вы успешно зарегистрировались!",
@@ -184,15 +183,11 @@ function App() {
   }
 
   function handleLogin(email, password) {
-    console.log("in handleLogin:", email, password);
     auth
       .authorize(email, password)
       .then((res) => {
-        console.log("in handleLogin-authorize:", res.token);
         localStorage.setItem("token", res.token);
-      })
-      .then(() => {
-        checkToken();
+        checkToken(localStorage.getItem("token"));
       })
       .catch(() => {
         setTooltipData({

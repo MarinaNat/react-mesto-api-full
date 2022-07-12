@@ -8,9 +8,42 @@ const AuthError = require('../utils/errors/authorizedErr');
 const UserAlreadyExists = require('../utils/errors/userAlreadyExists');
 // const {error} = require("winston");
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET, NODE_ENV } = process.env;
 
 const saltRounds = 10;
+
+// запрос всех пользователей
+module.exports.getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => res.status(200).send({ data: users }))
+    .catch(next);
+};
+
+// Запрос пользователя по id
+module.exports.getUser = (req, res, next) => {
+  User.findById(req.params.userId)
+    .then((user) => {
+      if (!user) {
+        throw next(new NotFoundError({ message: 'Запрашиваемый пользователь не найден' }));
+      }
+      return res.send({ user });
+    })
+    .catch(next);
+};
+
+// информация о текущем пользователе
+module.exports.getUserProfile = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Такого пользователя нет');
+      }
+      return res.send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
 // Создание пользователя
 module.exports.createUser = (req, res, next) => {
@@ -66,46 +99,10 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-// Аутентификация пользователя
-module.exports.login = (req, res, next) => {
-  const { email, password } = req.body;
-
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
-        { expiresIn: '7d' },
-      );
-      res.send({ token });
-    })
-    .catch(() => {
-      next(new AuthError('Ошибка доступа'));
-    });
-};
-
-// запрос всех пользователей
-module.exports.getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => res.status(200).send({ data: users }))
-    .catch(next);
-};
-
-// Запрос пользователя по id
-module.exports.getUser = (req, res, next) => {
-  User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        return next(new NotFoundError('Запрашиваемый пользователь не найден'));
-      }
-      return res.send({ user });
-    })
-    .catch(next);
-};
-
 // редактирование профиля
 module.exports.putchUserProfile = (req, res, next) => {
   const { name, about } = req.body;
+
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
@@ -124,12 +121,13 @@ module.exports.putchUserProfile = (req, res, next) => {
 // редактирование аватара
 module.exports.putchUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
+
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Запрашиваемый пользователь не найден');
       }
-      return res.send(user);
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -139,17 +137,23 @@ module.exports.putchUserAvatar = (req, res, next) => {
     });
 };
 
-// информация о текущем пользователе
-module.exports.getUserProfile = (req, res, next) => {
-  User.findById(req.user._id)
+// Аутентификация пользователя
+
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+  console.log('email: ', email, ', password: ', password);
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Такого пользователя нет');
-      }
-      return res.send(user);
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
+        { expiresIn: '7d' },
+      );
+      const { name, avatar } = user;
+      res.send({ token, name, avatar });
     })
-    .catch((err) => {
-      next(err);
+    .catch(() => {
+      next(new AuthError('Ошибка доступа'));
     });
 };
 

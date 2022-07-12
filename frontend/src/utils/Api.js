@@ -1,104 +1,111 @@
-export default class Api {
-  constructor({ baseUrl, headers }) {
+class Api {
+  constructor({ baseUrl }) {
     this.baseUrl = baseUrl;
-    this.headers = headers;
-
   }
 
-  requestResponse(res) {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Все сломалось:( ${res.status}`);
+  getUserInfo() {
+    return fetch(`${this.baseUrl}/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+        .then((res) => res)
+        .catch(e => console.log(e))
   }
 
-  getHeaders() {
-    const token = localStorage.getItem('jwt');
-    return {
-      'Authorization': `Bearer ${token}`,
-      ...this.headers,
-    };
-  }
-
-  //данные с сервера о карточках
   getCard() {
     return fetch(`${this.baseUrl}/cards`, {
-      method: 'GET',
-      headers: this.getHeaders(),
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
-      .then(this.requestResponse)
+        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+        .then((res) => res)
+        .catch(e => console.log(e))
   }
 
-  //отправка данных карты
-  addCard(name, link) {
+  setUserInfo({name, about}) {
+    return fetch(`${this.baseUrl}/users/me`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        name: name,
+        about: about,
+      }),
+    })
+        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+        .then((res) => res)
+        .catch(e => console.log(e))
+  }
+
+  addCard({name, link}) {
     return fetch(`${this.baseUrl}/cards`, {
-      method: 'POST',
-      headers: this.getHeaders(),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
       body: JSON.stringify({
         name,
         link
       })
     })
-      .then(this.requestResponse)
+        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+        .then((res) => res)
+        .catch(e => console.log(e))
   }
 
-  //данные с сервера о профиле
-  getUserInfo() {
-    return fetch(`${this.baseUrl}/users/me`, {
-      method: 'GET',
-      headers: this.getHeaders(),
-    })
-      .then(this.requestResponse);
-  }
-
-  //отправка данных профиля
-  setUserInfo(name, job) {
-    return fetch(`${this.baseUrl}/users/me`, {
-      method: 'PATCH',
-      headers: this.getHeaders(),
-      body: JSON.stringify({
-        name: name,
-        about: job
-      })
-    })
-      .then(this.requestResponse)
-  }
-
-  //отправка данных аватарки
-  setUserAvatar(data) {
-    return fetch(`${this.baseUrl}/users/me/avatar`, {
-      method: 'PATCH',
-      headers: this.getHeaders(),
-      body: JSON.stringify({
-        avatar: data.avatar
-      })
-    })
-      .then(this.requestResponse)
-  }
-
-  //удаление карточек
-  deleteCard(id) { 
+  deleteCard(id) {
     return fetch(`${this.baseUrl}/cards/${id}`, {
-        method: 'DELETE',
-        headers: this.getHeaders(),
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
-        .then(this.requestResponse)
-}
+        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+        .then((res) => res)
+        .catch(e => console.log(e))
+  }
 
-  //добавленеи, удаление лайков
   changeLikeCardStatus(id, isLiked) {
     return fetch(`${this.baseUrl}/cards/${id}/likes`, {
-      method: `${isLiked ? 'PUT' : 'DELETE'}`,
-        headers: this.getHeaders(),
+      method: `${isLiked ? "PUT" : "DELETE"}`,
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
-        .then(this.requestResponse);
+        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+        .then((res) => res)
+        .catch(e => console.log(e))
+  }
+
+  setUserAvatar(data) {
+    return fetch(`${this.baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        avatar: data.avatar,
+      }),
+    })
+        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+        .then((res) => res)
+        .catch(e => console.log(e))
   }
 }
 
-  export const api = new Api({
-    baseUrl: "https://api.marina.nomoredomains.sbs",
-    headers: {
-      // authorization: "143aa2a9-cefa-4929-a9d6-e76e666a89c9",
-      "Content-Type": "application/json",
-    },
-  });
+export const api = new Api({
+  baseUrl: "http://localhost:3000",
+});
