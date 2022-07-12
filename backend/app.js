@@ -9,8 +9,8 @@ const cors = require('cors');
 // const helmet = require('helmet');
 // const { validateURL, putError } = require('./utils/error');
 
-const { userRouter } = require('./routes/users');
-const { cardRouter } = require('./routes/cards');
+// const { userRouter } = require('./routes/users');
+// const { cardRouter } = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./utils/errors/not-found-err');
 const handleErrors = require('./middlewares/handleErrors');
@@ -64,13 +64,13 @@ app.post(
   createUser,
 );
 
-// app.use(auth);
+app.use(auth);
 
-// app.use(require('./routes/users'));
-// app.use(require('./routes/cards)'));
+app.use(require('./routes/users'));
+app.use(require('./routes/cards'));
 
-app.use('/', auth, userRouter);
-app.use('/', auth, cardRouter);
+// app.use('/', auth, userRouter);
+// app.use('/', auth, cardRouter);
 // Обработчик 404-ошибки
 // app.use(auth, (req, res, next) => next(new NotFoundError('Cтраница не найдена')));
 

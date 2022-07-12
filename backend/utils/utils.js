@@ -1,14 +1,14 @@
 const allowedCors = [
-    'https://api.marina.nomoredomains.sbs',
-    'http://api.marina.nomoredomains.sbs',
-    'http://marina.nomoredomains.sbs',
-    'https://marina.nomoredomains.sbs',
-    'http://localhost:3001',
-    'http://localhost:3000',
-    'https://localhost:3001',
-    'https://localhost:3000',
-    'https://web.postman.co',
-  ];
+  'https://api.marina.nomoredomains.sbs',
+  'http://api.marina.nomoredomains.sbs',
+  'http://marina.nomoredomains.sbs',
+  'https://marina.nomoredomains.sbs',
+  'http://localhost:3001',
+  'http://localhost:3000',
+  'https://localhost:3001',
+  'https://localhost:3000',
+  'https://web.postman.co',
+];
 
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 

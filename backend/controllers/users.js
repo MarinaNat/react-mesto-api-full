@@ -6,7 +6,6 @@ const NotFoundError = require('../utils/errors/not-found-err');
 const ValidationError = require('../utils/errors/validation-err');
 const AuthError = require('../utils/errors/authorized-err');
 const UserAlreadyExists = require('../utils/errors/user-already-exists');
-const user = require('../models/user');
 // const {error} = require("winston");
 
 const { JWT_SECRET, NODE_ENV } = process.env;
@@ -16,8 +15,7 @@ const saltRounds = 10;
 // запрос всех пользователей
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) =>
-      res.status(200).send({ data: users }))
+    .then((users) => res.status(200).send({ data: users }))
     .catch(next);
 };
 
@@ -63,10 +61,6 @@ module.exports.createUser = (req, res, next) => {
 
   User.findOne({ email })
     .then((user) => {
-      if (!email) {
-        const err = new Error('Email не может быть пустым');
-        return next(err);
-      }
       if (user) {
         throw new UserAlreadyExists('Такой пользователь уже существует');
       } else {
@@ -75,14 +69,13 @@ module.exports.createUser = (req, res, next) => {
         //   return next(err);
 
         bcrypt.hash(password, saltRounds)
-          .then((hash) =>
-            User.create({
-              name,
-              about,
-              avatar,
-              email,
-              password: hash,
-            }))
+          .then((hash) => User.create({
+            name,
+            about,
+            avatar,
+            email,
+            password: hash,
+          }))
           .then((userData) => res.send({
             name: userData.name,
             about: userData.about,
@@ -106,7 +99,7 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-//редактирование профиля
+// редактирование профиля
 module.exports.putchUserProfile = (req, res, next) => {
   const { name, about } = req.body;
 
@@ -125,7 +118,7 @@ module.exports.putchUserProfile = (req, res, next) => {
     });
 };
 
-//редактирование аватара
+// редактирование аватара
 module.exports.putchUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
@@ -148,7 +141,7 @@ module.exports.putchUserAvatar = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-console.log('email: ', email, ', password: ', password)
+  console.log('email: ', email, ', password: ', password);
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
@@ -156,8 +149,8 @@ console.log('email: ', email, ', password: ', password)
         NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
         { expiresIn: '7d' },
       );
-      const { name, email, avatar } = user; 
-      res.send({ token, name, email, avatar });
+      const { name, avatar } = user;
+      res.send({ token, name, avatar });
     })
     .catch(() => {
       next(new AuthError('Ошибка доступа'));
