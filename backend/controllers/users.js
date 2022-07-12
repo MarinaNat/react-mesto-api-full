@@ -2,10 +2,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // const { genToken } = require('../middlewares/auth');
 const User = require('../models/user');
-const NotFoundError = require('../utils/errors/not-found-err');
-const ValidationError = require('../utils/errors/validation-err');
-const AuthError = require('../utils/errors/authorized-err');
-const UserAlreadyExists = require('../utils/errors/user-already-exists');
+const NotFoundError = require('../utils/errors/notFoundErr');
+const ValidationError = require('../utils/errors/validationErr');
+const AuthError = require('../utils/errors/authorizedErr');
+const UserAlreadyExists = require('../utils/errors/userAlreadyExists');
 // const {error} = require("winston");
 
 const { JWT_SECRET, NODE_ENV } = process.env;

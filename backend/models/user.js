@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 // const { isEmail } = require('validator');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-const AuthError = require('../utils/errors/authorized-err');
+const AuthError = require('../utils/errors/authorizedErr');
 // const jwt = require('jsonwebtoken');
 const { validateURL } = require('../utils/const');
 

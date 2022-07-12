@@ -1,7 +1,7 @@
 const Card = require('../models/card');
-const NotFoundError = require('../utils/errors/not-found-err');
-const ValidationError = require('../utils/errors/validation-err');
-const ForbiddenError = require('../utils/errors/forbidden-уrr');
+const NotFoundError = require('../utils/errors/notFoundErr');
+const ValidationError = require('../utils/errors/validationErr');
+const ForbiddenError = require('../utils/errors/forbiddenYrr');
 
 // Запрос всех карточек
 const getCards = (req, res, next) => {
