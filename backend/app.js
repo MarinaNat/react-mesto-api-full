@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const cors = require('cors');
 
 const { userRouter } = require('./routes/users');
@@ -19,7 +20,7 @@ const app = express();
 const { PORT = 3000 } = process.env;
 
 app.use(bodyParser.json());
-
+app.use(helmet());
 app.use(requestLogger);
 app.use(cors({ credentials: true, origin: ['https://api.marina.nomoredomains.sbs', 'http://api.marina.nomoredomains.sbs', 'http://marina.nomoredomains.sbs', 'https://marina.nomoredomains.sbs', 'http://localhost:3001', 'http://localhost:3000', 'https://localhost:3001', 'https://localhost:3000', 'https://web.postman.co'] }));
 
