@@ -3,34 +3,36 @@ class Api {
     this.baseUrl = baseUrl;
   }
 
+  checkPromise(promise) {
+    return promise.then((res) => {
+      return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
+    });
+  }
+
   getUserInfo() {
-    return fetch(`${this.baseUrl}/users/me`, {
+    const promise = fetch(`${this.baseUrl}/users/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
-        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-        .then((res) => res)
-        .catch(e => console.log(e))
+    return this.checkPromise(promise)
   }
 
   getCard() {
-    return fetch(`${this.baseUrl}/cards`, {
+    const promise = fetch(`${this.baseUrl}/cards`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
-        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-        .then((res) => res)
-        .catch(e => console.log(e))
+    return this.checkPromise(promise)
   }
 
   setUserInfo({name, about}) {
-    return fetch(`${this.baseUrl}/users/me`, {
+    const promise = fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -41,13 +43,11 @@ class Api {
         about: about,
       }),
     })
-        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-        .then((res) => res)
-        .catch(e => console.log(e))
+    return this.checkPromise(promise)
   }
 
   addCard({name, link}) {
-    return fetch(`${this.baseUrl}/cards`, {
+    const promise = fetch(`${this.baseUrl}/cards`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -58,39 +58,33 @@ class Api {
         link
       })
     })
-        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-        .then((res) => res)
-        .catch(e => console.log(e))
+    return this.checkPromise(promise)
   }
 
   deleteCard(id) {
-    return fetch(`${this.baseUrl}/cards/${id}`, {
+    const promise = fetch(`${this.baseUrl}/cards/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
-        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-        .then((res) => res)
-        .catch(e => console.log(e))
+    return this.checkPromise(promise)
   }
 
   changeLikeCardStatus(id, isLiked) {
-    return fetch(`${this.baseUrl}/cards/${id}/likes`, {
+    const promise = fetch(`${this.baseUrl}/cards/${id}/likes`, {
       method: `${isLiked ? "PUT" : "DELETE"}`,
       headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
-        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-        .then((res) => res)
-        .catch(e => console.log(e))
+    return this.checkPromise(promise)
   }
 
   setUserAvatar(data) {
-    return fetch(`${this.baseUrl}/users/me/avatar`, {
+    const promise = fetch(`${this.baseUrl}/users/me/avatar`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -100,9 +94,7 @@ class Api {
         avatar: data.avatar,
       }),
     })
-        .then((res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
-        .then((res) => res)
-        .catch(e => console.log(e))
+    return this.checkPromise(promise)
   }
 }
 
