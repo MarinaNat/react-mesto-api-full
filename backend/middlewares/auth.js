@@ -14,7 +14,6 @@ const auth = (req, res, next) => {
 
     try {
       payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY');
-      console.log('NODE_ENV auth:', NODE_ENV);
     } catch (err) {
       throw new AuthError('Не пройдена авторизация');
     }

@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-const YOUR_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmNmMWU0M2I0YjcyYTkzZTQxZDYzN2MiLCJpYXQiOjE2NTc3NDA4ODgsImV4cCI6MTY1ODM0NTY4OH0.j7RHNo5FhvBANFP2P2Pbs8DZ0sk0F8bMnGNoxlKqItk'; // вставьте сюда JWT, который вернул публичный сервер студента
-const SECRET_KEY_DEV = 'SECRET_KEY'; // вставьте сюда секретный ключ для разработки из кода студента
+const YOUR_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmNmM2Y4M2I0YjcyYTkzZTQxZDYzYjIiLCJpYXQiOjE2NTc3NDkzOTAsImV4cCI6MTY1ODM1NDE5MH0._lsVXid36XHsaFJ4zUC8nxXneryuCx_4QAYrswyFrGU'; // вставьте сюда JWT, который вернул публичный сервер студента
+const SECRET_KEY_DEV = 'eb28135ebcfc17578f96d4d65b6c7871f2c803be4180c165061d5c2db621c51b'; // вставьте сюда секретный ключ для разработки из кода студента
 try {
-  jwt.verify(YOUR_JWT, SECRET_KEY_DEV);
+  const payload = jwt.verify(YOUR_JWT, SECRET_KEY_DEV);
   console.log('\x1b[31m%s\x1b[0m', `
 Надо исправить. В продакшне используется тот же
 секретный ключ, что и в режиме разработки.
