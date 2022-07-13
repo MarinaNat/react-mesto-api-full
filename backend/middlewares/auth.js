@@ -13,7 +13,7 @@ const auth = (req, res, next) => {
     let payload;
 
     try {
-      payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY');
+      payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'QWERTY');
     } catch (err) {
       throw new AuthError('Не пройдена авторизация');
     }
