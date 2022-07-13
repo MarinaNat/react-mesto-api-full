@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-const YOUR_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmNhOTQwNmU5YTI2MTRjODE1MTliMjIiLCJpYXQiOjE2NTc3NDAwMjYsImV4cCI6MTY1ODM0NDgyNn0.v7GwOxjY7iTFgOamZkj_QKRR3xJpzYp68BaWER8IFQE'; // вставьте сюда JWT, который вернул публичный сервер студента
+const YOUR_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmNmMWU0M2I0YjcyYTkzZTQxZDYzN2MiLCJpYXQiOjE2NTc3NDA4ODgsImV4cCI6MTY1ODM0NTY4OH0.j7RHNo5FhvBANFP2P2Pbs8DZ0sk0F8bMnGNoxlKqItk'; // вставьте сюда JWT, который вернул публичный сервер студента
 const SECRET_KEY_DEV = 'SECRET_KEY'; // вставьте сюда секретный ключ для разработки из кода студента
 try {
-  const payload = jwt.verify(YOUR_JWT, SECRET_KEY_DEV);
+  jwt.verify(YOUR_JWT, SECRET_KEY_DEV);
   console.log('\x1b[31m%s\x1b[0m', `
 Надо исправить. В продакшне используется тот же
 секретный ключ, что и в режиме разработки.
@@ -18,7 +18,7 @@ try {
     console.log(
       '\x1b[33m%s\x1b[0m',
       'Что-то не так',
-      err
+      err,
     );
   }
 }

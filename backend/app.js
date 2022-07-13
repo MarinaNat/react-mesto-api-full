@@ -61,7 +61,7 @@ app.use('/', auth, cardRouter);
 app.all('*', () => {
   throw new NotFoundError('Страница не найдена');
 });
-
+console.log('NODE_ENV in app: ', process.env.NODE_ENV);
 mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true, family: 4 });
 
 app.use(errorLogger);
