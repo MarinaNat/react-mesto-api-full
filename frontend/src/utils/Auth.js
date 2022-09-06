@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.marina.nomoredomains.sbs";
+export const BASE_URL = "http://79.143.31.216/squeeze?link=https%3A%2F%2Fwww.";
 
 function checkResponse(res) {
   if (res.ok) {

@@ -39,4 +39,3 @@
 ## Ссылки: 
 Ссылка на frontend проекта: [marina.nomoredomains.sbs](https://marina.nomoredomains.sbs)
 Ссылка на backend проекта:  [api.marina.nomoredomains.sbs](https://api.marina.nomoredomains.sbs)
-IPv4: нужно внести
